@@ -1,17 +1,22 @@
 import { google } from 'googleapis';
 
 export default async function handler(req, res) {
-  const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_REDIRECT_URI } = process.env;
   const oauth2Client = new google.auth.OAuth2(
-    GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET,
-    NEXT_PUBLIC_REDIRECT_URI
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/google/oauth/callback`
   );
-  const scopes = ['https://www.googleapis.com/auth/drive.file'];
-  const authUrl = oauth2Client.generateAuthUrl({
+
+  const scopes = [
+    'https://www.googleapis.com/auth/drive.file'
+  ];
+
+  const url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: scopes,
+    prompt: 'consent',
   });
-  res.redirect(authUrl);
+
+  res.redirect(url);
 }
 
