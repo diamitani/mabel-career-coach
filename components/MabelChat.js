@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import CareerAssessmentForm from "@/components/forms/CareerAssessmentForm";
+import IGNITEForm from "@/components/forms/IGNITEForm";
+import CareerStrongForm from "@/components/forms/CareerStrongForm";
 
 export default function MabelChat() {
   const [userType, setUserType] = useState(null);
@@ -12,6 +15,7 @@ export default function MabelChat() {
     },
   ]);
   const [loading, setLoading] = useState(false);
+  const [showForm, setShowForm] = useState(null);
 
   const assistantId = process.env.NEXT_PUBLIC_ASSISTANT_ID;
 
@@ -38,10 +42,7 @@ export default function MabelChat() {
 
   const handleSelect = async (type) => {
     setUserType(type);
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: type },
-    ]);
+    setMessages((prev) => [...prev, { role: "user", text: type }]);
     await sendMessageToAssistant(type);
     setStep("options");
   };
@@ -51,6 +52,7 @@ export default function MabelChat() {
       "Upload Resume",
       "Run Career Assessment",
       "Start IGNITE Questionnaire",
+      "Try Career Strong Module",
       "Launch Job Tracker",
       "Book Consult",
       "Newsletter Opt-In",
@@ -69,7 +71,15 @@ export default function MabelChat() {
 
   const handleOptionClick = async (option) => {
     setMessages((prev) => [...prev, { role: "user", text: option }]);
-    await sendMessageToAssistant(option);
+    if (option.includes("Assessment")) {
+      setShowForm("assessment");
+    } else if (option.includes("IGNITE")) {
+      setShowForm("ignite");
+    } else if (option.includes("Strong")) {
+      setShowForm("careerstrong");
+    } else {
+      await sendMessageToAssistant(option);
+    }
   };
 
   return (
@@ -81,21 +91,28 @@ export default function MabelChat() {
               <span className={`inline-block px-3 py-2 rounded-xl ${msg.role === "user" ? "bg-blue-100" : "bg-gray-100"}`}>{msg.text}</span>
             </div>
           ))}
+
           {step === "start" && (
             <div className="flex flex-wrap gap-2 mt-4">
-              {["Job Seeker", "Employer", "Coaching Client"].map((type) => (
+              {Object.keys(roleOptions).map((type) => (
                 <Button key={type} onClick={() => handleSelect(type)}>{type}</Button>
               ))}
             </div>
           )}
-          {step === "options" && userType && (
+
+          {step === "options" && userType && !showForm && (
             <div className="flex flex-wrap gap-2 mt-4">
               {roleOptions[userType]?.map((option) => (
                 <Button key={option} onClick={() => handleOptionClick(option)}>{option}</Button>
               ))}
             </div>
           )}
+
           {loading && <p className="mt-2 text-sm text-gray-500">Thinking...</p>}
+
+          {showForm === "assessment" && <CareerAssessmentForm />}
+          {showForm === "ignite" && <IGNITEForm />}
+          {showForm === "careerstrong" && <CareerStrongForm />}
         </CardContent>
       </Card>
     </div>
