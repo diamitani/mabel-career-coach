@@ -1,4 +1,10 @@
-node_modules
+# Dependency folders
+node_modules/
+
+# Environment files
 .env
+.env.local
+
+# OS or Editor metadata
 .DS_Store
 *.log
