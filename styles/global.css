@@ -1,25 +1,26 @@
-/* This is a basic global stylesheet */
+/* app/globals.css */
 
-/* Reset some default browser styles */
-* {
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-/* Body and global text styling */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f7f7f7;
+  background-color: #f4f4f9;
   color: #333;
-  padding: 20px;
 }
 
-/* General container styling */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+h1, h2, h3 {
+  color: #333;
 }
 
-/* Add more global styles as needed */
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
