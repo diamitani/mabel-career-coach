@@ -1,48 +1,59 @@
 // components/MabelChat.js
-'use client'; // Mark as client component to use useState
+'use client'; // Make sure this component is client-side since we are using React's useState
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import CareerAssessmentForm from "@/components/forms/CareerAssessmentForm"; // Your Career Assessment form
-import IGNITEForm from "@/components/forms/IGNITEForm"; // Your IGNITE form
+import { Button } from "@/components/ui/button"; 
+import CareerAssessmentForm from "@/components/forms/CareerAssessmentForm";
+import IGNITEForm from "@/components/forms/IGNITEForm";
+import { openai } from 'openai'; // OpenAI dependency
 
-export default function MabelChat() {
-  const [formType, setFormType] = useState(null); // Tracks the form being displayed
-  const [formData, setFormData] = useState({}); // Tracks form submission data
+const MabelChat = () => {
+  const [formType, setFormType] = useState(null); 
+  const [formData, setFormData] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
-  // Handle form submission
-  const handleFormSubmit = (data) => {
+  const handleFormSubmit = async (data) => {
+    setIsSubmitting(true); // Start the loading state
     setFormData(data);
-    setFormType(null); // Clear form after submission
+
+    try {
+      const response = await openai.chat({
+        model: "gpt-4",
+        messages: [{ role: "user", content: `Analyze this data: ${JSON.stringify(data)}` }],
+      });
+
+      setIsSubmitting(false);
+      console.log(response);
+    } catch (error) {
+      console.error("OpenAI Error:", error);
+      setIsSubmitting(false);
+    }
   };
 
-  // Handle form selection
   const handleFormSelection = (form) => {
     setFormType(form);
   };
 
   return (
     <div>
-      {/* Button to trigger form selection */}
       <div>
         <Button onClick={() => handleFormSelection('career')}>Career Assessment</Button>
         <Button onClick={() => handleFormSelection('ignite')}>IGNITE Form</Button>
       </div>
 
-      {/* Render the correct form based on user selection */}
       {formType === 'career' && <CareerAssessmentForm onSubmit={handleFormSubmit} />}
       {formType === 'ignite' && <IGNITEForm onSubmit={handleFormSubmit} />}
 
-      {/* Show submitted form data */}
+      {isSubmitting && <p>Submitting your data...</p>}
+
       {formData && (
-        <Card>
-          <CardContent>
-            <h3>Submitted Data</h3>
-            <pre>{JSON.stringify(formData, null, 2)}</pre>
-          </CardContent>
-        </Card>
+        <div>
+          <h3>Submitted Data</h3>
+          <pre>{JSON.stringify(formData, null, 2)}</pre>
+        </div>
       )}
     </div>
   );
-}
+};
+
+export default MabelChat;
