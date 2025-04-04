@@ -1,40 +1,34 @@
-import { google } from 'googleapis';
+import { google } from "googleapis";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/google/callback`
+  );
 
-  const { formType, data } = req.body;
+  oauth2Client.setCredentials(req.body.tokens); // Use tokens from callback
 
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    },
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
-  });
+  const drive = google.drive({ version: "v3", auth: oauth2Client });
 
-  const drive = google.drive({ version: 'v3', auth });
+  const fileMetadata = {
+    name: req.body.fileName,
+  };
+  const media = {
+    mimeType: "application/pdf",  // Adjust for your file type
+    body: req.body.fileContent,
+  };
 
   try {
-    const fileMetadata = {
-      name: `${formType}-submission-${Date.now()}.json`,
-      mimeType: 'application/json',
-    };
-
-    const media = {
-      mimeType: 'application/json',
-      body: JSON.stringify(data, null, 2),
-    };
-
-    const file = await drive.files.create({
+    const response = await drive.files.create({
       resource: fileMetadata,
-      media,
-      fields: 'id',
+      media: media,
+      fields: "id",
     });
 
-    res.status(200).json({ success: true, fileId: file.data.id });
+    res.status(200).send(`File uploaded: ${response.data.id}`);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to upload to Google Drive' });
+    console.error("Error uploading file:", error);
+    res.status(500).send("Failed to upload file");
   }
 }
