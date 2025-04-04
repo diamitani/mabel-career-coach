@@ -1,11 +1,11 @@
 // components/MabelChat.js
-'use client'; // Make sure this component is client-side since we are using React's useState
+'use client'; // Add this at the top to make this a Client Component
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button"; 
+import { useState } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import CareerAssessmentForm from "@/components/forms/CareerAssessmentForm";
 import IGNITEForm from "@/components/forms/IGNITEForm";
-import { openai } from 'openai'; // OpenAI dependency
 
 const MabelChat = () => {
   const [formType, setFormType] = useState(null); 
@@ -57,3 +57,4 @@ const MabelChat = () => {
 };
 
 export default MabelChat;
+
