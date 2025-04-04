@@ -1,76 +1,91 @@
-export default function CareerAssessmentForm({ onSubmit }) {
+import React, { useState } from "react";
+import { Button } from "../ui/button";
+
+const CareerAssessmentForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    careerGoals: "",
+    satisfaction: "",
+    biggestChallenge: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Data: ", formData);
+    alert("Form submitted successfully!");
+  };
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4 mt-4">
-      <h2 className="text-lg font-bold">Career & Well-Being Assessment</h2>
+    <form onSubmit={handleSubmit}>
+      <h2>Career Assessment</h2>
 
-      <label>Career Satisfaction (1–5):</label>
-      <input name="satisfaction" type="number" min="1" max="5" className="w-full border p-2" required />
+      <div>
+        <label>Your Name</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Enter your name"
+        />
+      </div>
 
-      <label>Do you feel valued and recognized?</label>
-      <select name="valued" className="w-full border p-2" required>
-        <option>Always</option>
-        <option>Sometimes</option>
-        <option>Rarely</option>
-        <option>Never</option>
-      </select>
+      <div>
+        <label>Your Career Goals</label>
+        <textarea
+          name="careerGoals"
+          value={formData.careerGoals}
+          onChange={handleChange}
+          placeholder="Describe your career goals"
+        />
+      </div>
 
-      <label>Do you see growth opportunities?</label>
-      <select name="growth" className="w-full border p-2" required>
-        <option>Yes</option>
-        <option>No</option>
-        <option>Unsure</option>
-      </select>
+      <div>
+        <label>How satisfied are you with your current job/career?</label>
+        <select
+          name="satisfaction"
+          value={formData.satisfaction}
+          onChange={handleChange}
+        >
+          <option value="">Select</option>
+          <option value="1">1 - Not satisfied at all</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 - Highly satisfied</option>
+        </select>
+      </div>
 
-      <label>Biggest Career Challenge:</label>
-      <select name="challenge" className="w-full border p-2" required>
-        <option>Lack of career progression</option>
-        <option>Job insecurity</option>
-        <option>Workplace culture</option>
-        <option>Lack of skill development</option>
-        <option>Work-life balance</option>
-      </select>
+      <div>
+        <label>Your biggest challenge in your career?</label>
+        <select
+          name="biggestChallenge"
+          value={formData.biggestChallenge}
+          onChange={handleChange}
+        >
+          <option value="">Select</option>
+          <option value="lack_of_progress">Lack of career progression</option>
+          <option value="job_insecurity">Job insecurity</option>
+          <option value="workplace_culture">Workplace culture</option>
+          <option value="lack_of_skill">Lack of skill development</option>
+          <option value="work_life_balance">Work-life balance</option>
+        </select>
+      </div>
 
-      <label>Upskilling in the past year?</label>
-      <select name="upskilling" className="w-full border p-2" required>
-        <option>Yes</option>
-        <option>No</option>
-      </select>
-
-      <label>Area to Improve:</label>
-      <select name="improvement" className="w-full border p-2" required>
-        <option>Leadership & Management</option>
-        <option>Communication & Public Speaking</option>
-        <option>Technical Skills</option>
-        <option>Negotiation & Salary Growth</option>
-        <option>Job Search & Resume Building</option>
-      </select>
-
-      <label>Work-related stress frequency:</label>
-      <select name="stress" className="w-full border p-2" required>
-        <option>Daily</option>
-        <option>Weekly</option>
-        <option>Occasionally</option>
-        <option>Rarely</option>
-      </select>
-
-      <label>Support for mental health at work:</label>
-      <select name="mental_support" className="w-full border p-2" required>
-        <option>Yes</option>
-        <option>Somewhat</option>
-        <option>No</option>
-      </select>
-
-      <label>Biggest well-being struggle:</label>
-      <select name="wellbeing" className="w-full border p-2" required>
-        <option>Burnout & Work-life balance</option>
-        <option>Confidence & Self-worth</option>
-        <option>Navigating workplace relationships</option>
-        <option>Handling career uncertainty</option>
-        <option>Other</option>
-      </select>
-
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Submit Assessment</button>
+      <div>
+        <Button label="Submit" onClick={handleSubmit} />
+      </div>
     </form>
   );
-}
+};
+
+export default CareerAssessmentForm;
 
