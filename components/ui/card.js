@@ -1,7 +1,13 @@
-export function Card({ children }) {
-  return <div className="bg-white shadow p-4 rounded-xl">{children}</div>;
-}
+import React from "react";
 
-export function CardContent({ children }) {
-  return <div>{children}</div>;
-}
+export const Card = ({ children }) => {
+  return (
+    <div className="card">
+      {children}
+    </div>
+  );
+};
+
+export const CardContent = ({ children }) => {
+  return <div className="card-content">{children}</div>;
+};
