@@ -1,29 +1,33 @@
 // app/layout.js
-
-import React from 'react';
-import './globals.css';  // This will include any global CSS you have in your project
-
-// Example if you're using Google Fonts
-import { Inter } from 'next/font/google'; 
-const inter = Inter({ subsets: ['latin'] });
-
-export const metadata = {
-  title: 'Mabel Career Coach',
-  description: 'Your career assistant powered by AI',
-};
+import './globals.css'; // Don't forget to import your global styles
+import { useEffect } from 'react';
 
 export default function RootLayout({ children }) {
+  useEffect(() => {
+    // Add any global side-effects here, if necessary
+  }, []);
+
   return (
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Mabel Career Coach" />
+        <title>Mabel Career Coach</title>
       </head>
-      <body className={inter.className}>
-        {/* Main content */}
-        {children}
+      <body>
+        <div className="container">
+          <header>
+            <h1>Mabel Career Coach</h1>
+          </header>
+
+          <main>{children}</main>
+
+          <footer>
+            <p>© 2025 Mabel Career Coach. All rights reserved.</p>
+          </footer>
+        </div>
       </body>
     </html>
   );
 }
+
